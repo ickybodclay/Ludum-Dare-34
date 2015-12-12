@@ -54,6 +54,8 @@ public class Hydra : MonoBehaviour {
         HydraHead newHead = head.GetComponent<HydraHead>();
         newHead.AttachToBody(m_Body);
         m_Heads.Add(newHead);
+        m_CurrentHeadIndex = m_Heads.Count - 1;
+        GameManager.instance.HighlightHead(m_Heads[m_CurrentHeadIndex]);
 
         m_AudioSource.pitch = Random.Range(.8f, 1f);
         m_AudioSource.Play();
