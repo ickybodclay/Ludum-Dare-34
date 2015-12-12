@@ -1,42 +1,45 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Hydra : MonoBehaviour {
+    [SerializeField] private GameObject m_HeadPrefab;
+    [SerializeField] private GameObject m_Body;
 
-    [SerializeField]
-    private GameObject head1;
-    [SerializeField]
-    private GameObject head2;
-    [SerializeField]
-    private GameObject head3;
+    private Rigidbody2D rb;
 
-    private int eatClickCounter;
+    private List<HydraHead> m_Heads = new List<HydraHead>();
+    private int m_CurrentHeadIndex;
 
-    // Use this for initialization
     void Start () {
-	
+        rb = GetComponent<Rigidbody2D>();
 	}
 	
-	// Update is called once per frame
 	private void Update () {
         HandleInput();
 	}
 
     private void HandleInput() {
         if (Input.GetMouseButtonDown(0)) {
-            switch (eatClickCounter) {
-                case 0:
-                    head1.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane));
-                    break;
-                case 1:
-                    head2.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane));
-                    break;
-                case 2:
-                    head3.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane));
-                    break;
-            }
-
-            eatClickCounter = (eatClickCounter + 1) % 3;
+            Chomp();
         }
+
+        if (Input.GetMouseButtonDown(1)) {
+            GrowHead();
+        }
+    }
+
+    private void Chomp() {
+        if (m_Heads.Count <= 0) return;
+
+        m_Heads[m_CurrentHeadIndex].MoveSkull(Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane)));
+        m_CurrentHeadIndex = (m_CurrentHeadIndex + 1) % m_Heads.Count;
+    }
+
+    private void GrowHead() {
+        GameObject head = Instantiate(m_HeadPrefab, transform.position, Quaternion.identity) as GameObject;
+        HydraHead newHead = head.GetComponent<HydraHead>();
+        newHead.AttachToBody(m_Body);
+        m_Heads.Add(newHead);
     }
 }
