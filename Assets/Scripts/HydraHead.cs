@@ -11,6 +11,9 @@ public class HydraHead : MonoBehaviour {
     private Vector3 m_Target;
     private bool m_IsChomping;
 
+    private float m_Health;
+    private float m_MaxHealth;
+
     private void Start() {
         m_Hydra = GetComponentInParent<Hydra>();
         m_SkullRb = m_Skull.GetComponent<Rigidbody2D>();
