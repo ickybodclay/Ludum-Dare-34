@@ -6,7 +6,7 @@ public class HydraHead : MonoBehaviour {
     [SerializeField] private GameObject m_NeckStart;
 
     private Rigidbody2D m_SkullRb;
-    private float m_Speed = 500f;
+    private float m_Speed = 20f;
     private Vector3 m_Target;
     private bool m_IsChomping;
 
@@ -23,7 +23,7 @@ public class HydraHead : MonoBehaviour {
     private void FixedUpdate() {
         if (m_IsChomping) {
             Vector2 direction = (m_Target - m_Skull.transform.position).normalized;
-            m_SkullRb.AddForce(direction * m_Speed, ForceMode2D.Force);
+            m_SkullRb.AddForce(direction * m_Speed, ForceMode2D.Impulse);
 
             float dist = Vector3.Distance(m_Skull.transform.position, m_Target);
             if (dist < 1f) {
