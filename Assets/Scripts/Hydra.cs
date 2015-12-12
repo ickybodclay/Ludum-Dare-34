@@ -8,11 +8,15 @@ public class Hydra : MonoBehaviour {
     [SerializeField] private GameObject m_Body;
     [SerializeField] private Text m_PeasantsEatenText;
 
+    private AudioSource m_AudioSource;
+
     private List<HydraHead> m_Heads = new List<HydraHead>();
     private int m_CurrentHeadIndex;
     private int m_FoodTotal;
 
     private void Start () {
+        m_AudioSource = GetComponent<AudioSource>();
+
         GrowHead();
         GameManager.instance.HighlightHead(m_Heads[m_CurrentHeadIndex]);
     }
@@ -50,6 +54,9 @@ public class Hydra : MonoBehaviour {
         HydraHead newHead = head.GetComponent<HydraHead>();
         newHead.AttachToBody(m_Body);
         m_Heads.Add(newHead);
+
+        m_AudioSource.pitch = Random.Range(.8f, 1f);
+        m_AudioSource.Play();
     }
 
     public void AddFood(int food) {
