@@ -32,7 +32,7 @@ public class Hydra : MonoBehaviour {
     private void Chomp() {
         if (m_Heads.Count <= 0) return;
 
-        m_Heads[m_CurrentHeadIndex].MoveSkull(Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane)));
+        m_Heads[m_CurrentHeadIndex].ChompAt(Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane)));
         m_CurrentHeadIndex = (m_CurrentHeadIndex + 1) % m_Heads.Count;
     }
 
