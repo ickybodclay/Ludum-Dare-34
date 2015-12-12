@@ -13,7 +13,10 @@ public class Hydra : MonoBehaviour {
 
     void Start () {
         rb = GetComponent<Rigidbody2D>();
-	}
+
+        GrowHead();
+        GameManager.instance.HighlightHead(m_Heads[m_CurrentHeadIndex]);
+    }
 	
 	private void Update () {
         HandleInput();
@@ -34,6 +37,8 @@ public class Hydra : MonoBehaviour {
 
         m_Heads[m_CurrentHeadIndex].ChompAt(Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane)));
         m_CurrentHeadIndex = (m_CurrentHeadIndex + 1) % m_Heads.Count;
+
+        GameManager.instance.HighlightHead(m_Heads[m_CurrentHeadIndex]);
     }
 
     private void GrowHead() {

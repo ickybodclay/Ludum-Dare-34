@@ -14,4 +14,10 @@ public class GameManager : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
     }
 
+    public void HighlightHead(HydraHead head) {
+        OutlineEffect effect = Camera.main.GetComponent<OutlineEffect>();
+        effect.outlineRenderers.Clear();
+        effect.outlineRenderers.Add(head.GetComponentInChildren<SpriteRenderer>());
+    }
+
 }
