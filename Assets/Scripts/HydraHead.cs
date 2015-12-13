@@ -19,8 +19,7 @@ public class HydraHead : MonoBehaviour {
     private float m_SkullIdlePosY = 2.0f;
     private int m_StartSortingOrder;
 
-    private void Start() {
-        m_Hydra = GetComponentInParent<Hydra>();
+    private void Awake() {
         m_SkullRb = m_Skull.GetComponent<Rigidbody2D>();
         m_SkullRenderer = m_Skull.GetComponent<SpriteRenderer>();
         m_SkullRenderer.color = Random.ColorHSV();
@@ -30,6 +29,7 @@ public class HydraHead : MonoBehaviour {
     public void AttachToBody(GameObject body) {
         transform.parent = body.transform.parent;
         m_NeckStart.GetComponent<DistanceJoint2D>().connectedBody = body.GetComponent<Rigidbody2D>();
+        m_Hydra = GetComponentInParent<Hydra>();
     }
 
     private void FixedUpdate() {
