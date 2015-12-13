@@ -14,6 +14,14 @@ public class GameManager : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
     }
 
+    private void Start() {
+#if UNITY_WEBGL
+        Camera.main.GetComponent<OutlineEffect>().flipY = false;
+#else
+        Camera.main.GetComponent<OutlineEffect>().flipY = true;
+#endif
+    }
+
     public void HighlightHead(HydraHead head) {
         OutlineEffect effect = Camera.main.GetComponent<OutlineEffect>();
         effect.outlineRenderers.Clear();

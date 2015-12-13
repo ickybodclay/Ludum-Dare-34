@@ -19,11 +19,28 @@ public class HydraHead : MonoBehaviour {
     private float m_SkullIdlePosY = 2.0f;
     private int m_StartSortingOrder;
 
+    private Color[] m_SkullColors = new Color[] {
+        Color.blue,
+        Color.cyan,
+        Color.red,
+        Color.magenta,
+        Color.green,
+        Color.yellow
+    };
+
     private void Awake() {
         m_SkullRb = m_Skull.GetComponent<Rigidbody2D>();
         m_SkullRenderer = m_Skull.GetComponent<SpriteRenderer>();
-        m_SkullRenderer.color = Random.ColorHSV();
+        m_SkullRenderer.color = RandomColor();
         m_StartSortingOrder = m_SkullRenderer.sortingOrder;
+    }
+
+    private Color RandomColor() {
+        Color col = m_SkullColors[Random.Range(0, m_SkullColors.Length)];
+        col.r = Random.Range(0f, col.r);
+        col.g = Random.Range(0f, col.g);
+        col.b = Random.Range(0f, col.b);
+        return col;
     }
 
     public void AttachToBody(GameObject body) {

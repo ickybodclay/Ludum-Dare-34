@@ -12,12 +12,15 @@ public class Hydra : MonoBehaviour {
     private List<HydraHead> m_Heads = new List<HydraHead>();
     private int m_CurrentHeadIndex;
     private int m_FoodTotal;
+    private int m_FoodNeededToGrow;
 
     private void Start () {
         m_AudioSource = GetComponent<AudioSource>();
 
         GrowHead();
         GameManager.instance.HighlightHead(m_Heads[m_CurrentHeadIndex]);
+
+        m_FoodNeededToGrow = 10;
     }
 	
 	private void Update () {
@@ -31,12 +34,19 @@ public class Hydra : MonoBehaviour {
         }
 
         if (Input.GetMouseButtonDown(1)) {
-            GrowHead();
+            if (CanGrow()) {
+                GrowHead();
+            }
+            else {
+                m_AudioSource.pitch = 1f;
+                //m_AudioSource.clip = null;
+                m_AudioSource.Play();
+            }
         }
     }
 
     private void UpdateUI() {
-        m_PeasantsEatenText.text = string.Format("Peasants eaten = {0}", m_FoodTotal);
+        m_PeasantsEatenText.text = string.Format("Food={0}, Grow At={1}", m_FoodTotal, m_FoodNeededToGrow);
     }
 
     private void Chomp() {
@@ -57,6 +67,29 @@ public class Hydra : MonoBehaviour {
 
         m_AudioSource.pitch = Random.Range(.8f, 1f);
         m_AudioSource.Play();
+
+        m_FoodNeededToGrow *= 2;
+    }
+
+    private void LoseHead(int headIndex) {
+        if (m_Heads.Count == 0) {
+            Die();
+            return;
+        }
+
+        m_Heads.RemoveAt(headIndex);
+
+        if (m_Heads.Count == 0) {
+            Die();
+            return;
+        }
+
+        m_FoodNeededToGrow /= 2;
+        if (m_FoodNeededToGrow < 10) m_FoodNeededToGrow = 10;
+    }
+
+    private void Die() {
+        Debug.Log("you died!");
     }
 
     public void AddFood(int food) {
@@ -64,11 +97,15 @@ public class Hydra : MonoBehaviour {
     }
 
     public void SetCurrentHead(int index) {
-        if(m_CurrentHeadIndex != index)
-            m_Heads[m_CurrentHeadIndex].EndFocus();
+        m_Heads[m_CurrentHeadIndex].EndFocus();
 
         m_CurrentHeadIndex = index;
         GameManager.instance.HighlightHead(m_Heads[m_CurrentHeadIndex]);
+
         m_Heads[m_CurrentHeadIndex].Focus();
+    }
+
+    public bool CanGrow() {
+        return m_FoodTotal > m_FoodNeededToGrow;
     }
 }
