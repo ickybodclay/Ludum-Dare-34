@@ -8,6 +8,7 @@ public class HydraHead : MonoBehaviour {
     private Hydra m_Hydra;
     private Rigidbody2D m_SkullRb;
     private SpriteRenderer m_SkullRenderer;
+    private Animator m_SkullAnimator;
     private float m_Speed = 20f;
     private Vector3 m_Target;
     private bool m_IsChomping;
@@ -31,15 +32,16 @@ public class HydraHead : MonoBehaviour {
     private void Awake() {
         m_SkullRb = m_Skull.GetComponent<Rigidbody2D>();
         m_SkullRenderer = m_Skull.GetComponent<SpriteRenderer>();
+        m_SkullAnimator = m_Skull.GetComponent<Animator>();
         m_SkullRenderer.color = RandomColor();
         m_StartSortingOrder = m_SkullRenderer.sortingOrder;
     }
 
     private Color RandomColor() {
         Color col = m_SkullColors[Random.Range(0, m_SkullColors.Length)];
-        col.r = Random.Range(0f, col.r);
-        col.g = Random.Range(0f, col.g);
-        col.b = Random.Range(0f, col.b);
+        col.r = Random.Range(col.r == 0f ? 0f : col.r * 0.5f, col.r);
+        col.g = Random.Range(col.g == 0f ? 0f : col.g * 0.5f, col.g);
+        col.b = Random.Range(col.b == 0f ? 0f : col.b * 0.5f, col.b);
         return col;
     }
 
@@ -72,11 +74,13 @@ public class HydraHead : MonoBehaviour {
         m_SkullRb.velocity = Vector3.zero;
         m_SkullRb.angularVelocity = 0f;
         m_SkullRb.inertia = 0f;
+        m_SkullAnimator.SetBool("Chomping", m_IsChomping);
     }
 
     public void ChompAt(Vector3 target) {
         m_Target = target;
         m_IsChomping = true;
+        m_SkullAnimator.SetBool("Chomping", m_IsChomping);
     }
 
     public void Eat(int targetCount) {
