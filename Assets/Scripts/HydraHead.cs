@@ -14,6 +14,9 @@ public class HydraHead : MonoBehaviour {
     private float m_Health;
     private float m_MaxHealth;
 
+    private float m_EndChompDistance = 9.9f;
+    private float m_SkullIdlePosY = 2.0f;
+
     private void Start() {
         m_Hydra = GetComponentInParent<Hydra>();
         m_SkullRb = m_Skull.GetComponent<Rigidbody2D>();
@@ -30,13 +33,12 @@ public class HydraHead : MonoBehaviour {
             Vector2 direction = (m_Target - m_Skull.transform.position).normalized;
             m_SkullRb.AddForce(direction * m_Speed, ForceMode2D.Impulse);
 
-            // FIXME need to demystify this magic number
             float dist = Vector3.Distance(m_Skull.transform.position, m_Target);
-            if (dist < 9.9f) {
+            if (dist < m_EndChompDistance) {
                 StartCoroutine(EndChomp());
             }
         }
-        else {
+        else if (m_Skull.transform.position.y < m_SkullIdlePosY) {
             m_SkullRb.AddForce(Vector3.up * m_Speed * 0.5f, ForceMode2D.Impulse);
         }
     }
