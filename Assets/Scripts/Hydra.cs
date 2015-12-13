@@ -6,6 +6,8 @@ public class Hydra : MonoBehaviour {
     [SerializeField] private GameObject m_HeadPrefab;
     [SerializeField] private GameObject m_Body;
     [SerializeField] private Image m_FoodBar;
+    [SerializeField] private Text m_EatHint;
+    [SerializeField] private Text m_GrowHint;
 
     private AudioSource m_AudioSource;
 
@@ -13,6 +15,8 @@ public class Hydra : MonoBehaviour {
     private int m_CurrentHeadIndex;
     private int m_FoodTotal;
     private int m_FoodNeededToGrow;
+
+    private bool m_HasGrown = false;
 
     private void Start () {
         m_AudioSource = GetComponent<AudioSource>();
@@ -36,6 +40,7 @@ public class Hydra : MonoBehaviour {
         if (Input.GetMouseButtonDown(1)) {
             if (CanGrow()) {
                 GrowHead();
+                m_HasGrown = true;
             }
             else {
                 m_AudioSource.pitch = 1f;
@@ -47,6 +52,14 @@ public class Hydra : MonoBehaviour {
 
     private void UpdateUI() {
         m_FoodBar.fillAmount = m_FoodTotal > m_FoodNeededToGrow ? 1f : (float)m_FoodTotal / m_FoodNeededToGrow;
+
+        if (CanGrow() && !m_HasGrown && !m_GrowHint.IsActive()) {
+            m_GrowHint.gameObject.SetActive(true);
+        }
+
+        if (m_HasGrown && m_GrowHint.IsActive()) {
+            m_GrowHint.gameObject.SetActive(false);
+        }
     }
 
     private void Chomp() {
@@ -55,6 +68,10 @@ public class Hydra : MonoBehaviour {
         m_Heads[m_CurrentHeadIndex].ChompAt(Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane)));
 
         SetCurrentHead((m_CurrentHeadIndex + 1) % m_Heads.Count);
+
+        if (m_EatHint.IsActive()) {
+            m_EatHint.gameObject.SetActive(false);
+        }
     }
 
     private void GrowHead() {
