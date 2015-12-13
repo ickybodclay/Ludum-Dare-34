@@ -57,7 +57,7 @@ public class HydraHead : MonoBehaviour {
             m_SkullRb.AddForce(direction * m_Speed, ForceMode2D.Impulse);
 
             float dist = Vector3.Distance(m_Skull.transform.position, m_Target);
-            if (dist < m_EndChompDistance) {
+            if (dist < m_EndChompDistance && !m_IsEndingChomp) {
                 StartCoroutine(EndChomp());
             }
         }
@@ -66,7 +66,10 @@ public class HydraHead : MonoBehaviour {
         }
     }
 
+    private bool m_IsEndingChomp = false;
     IEnumerator EndChomp() {
+        m_IsEndingChomp = true;
+
         yield return new WaitForSeconds(1f);
 
         Debug.Log("chomp complete");
@@ -75,6 +78,7 @@ public class HydraHead : MonoBehaviour {
         m_SkullRb.angularVelocity = 0f;
         m_SkullRb.inertia = 0f;
         m_SkullAnimator.SetBool("Chomping", m_IsChomping);
+        m_IsEndingChomp = false;
     }
 
     public void ChompAt(Vector3 target) {
