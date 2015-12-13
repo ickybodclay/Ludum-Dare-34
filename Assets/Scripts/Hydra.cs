@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class Hydra : MonoBehaviour {
     [SerializeField] private GameObject m_HeadPrefab;
     [SerializeField] private GameObject m_Body;
-    [SerializeField] private Text m_PeasantsEatenText;
+    [SerializeField] private Image m_FoodBar;
 
     private AudioSource m_AudioSource;
 
@@ -46,7 +46,7 @@ public class Hydra : MonoBehaviour {
     }
 
     private void UpdateUI() {
-        m_PeasantsEatenText.text = string.Format("Food={0}, Grow At={1}", m_FoodTotal, m_FoodNeededToGrow);
+        m_FoodBar.fillAmount = m_FoodTotal > m_FoodNeededToGrow ? 1f : (float)m_FoodTotal / m_FoodNeededToGrow;
     }
 
     private void Chomp() {
@@ -58,6 +58,8 @@ public class Hydra : MonoBehaviour {
     }
 
     private void GrowHead() {
+        m_FoodTotal -= m_FoodNeededToGrow;
+
         GameObject head = Instantiate(m_HeadPrefab, transform.position, Quaternion.identity) as GameObject;
         HydraHead newHead = head.GetComponent<HydraHead>();
         newHead.AttachToBody(m_Body);
