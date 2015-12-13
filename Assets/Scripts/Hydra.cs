@@ -106,6 +106,6 @@ public class Hydra : MonoBehaviour {
     }
 
     public bool CanGrow() {
-        return m_FoodTotal > m_FoodNeededToGrow;
+        return m_FoodTotal >= m_FoodNeededToGrow;
     }
 }
