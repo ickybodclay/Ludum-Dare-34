@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 public class HydraHead : MonoBehaviour {
     [SerializeField] private GameObject m_Skull;
@@ -29,15 +30,25 @@ public class HydraHead : MonoBehaviour {
             Vector2 direction = (m_Target - m_Skull.transform.position).normalized;
             m_SkullRb.AddForce(direction * m_Speed, ForceMode2D.Impulse);
 
+            // FIXME need to demystify this magic number
             float dist = Vector3.Distance(m_Skull.transform.position, m_Target);
-            if (dist < 1f) {
-                m_IsChomping = false;
-                m_SkullRb.velocity = Vector3.zero;
-                m_SkullRb.angularVelocity = 0f;
-                m_SkullRb.inertia = 0f;
-                m_Target = m_Skull.transform.position;
+            if (dist < 9.9f) {
+                StartCoroutine(EndChomp());
             }
         }
+        else {
+            m_SkullRb.AddForce(Vector3.up * m_Speed * 0.5f, ForceMode2D.Impulse);
+        }
+    }
+
+    IEnumerator EndChomp() {
+        yield return new WaitForSeconds(1f);
+
+        Debug.Log("chomp complete");
+        m_IsChomping = false;
+        m_SkullRb.velocity = Vector3.zero;
+        m_SkullRb.angularVelocity = 0f;
+        m_SkullRb.inertia = 0f;
     }
 
     public void ChompAt(Vector3 target) {
