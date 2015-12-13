@@ -7,6 +7,7 @@ public class HydraHead : MonoBehaviour {
 
     private Hydra m_Hydra;
     private Rigidbody2D m_SkullRb;
+    private SpriteRenderer m_SkullRenderer;
     private float m_Speed = 20f;
     private Vector3 m_Target;
     private bool m_IsChomping;
@@ -16,11 +17,14 @@ public class HydraHead : MonoBehaviour {
 
     private float m_EndChompDistance = 9.9f;
     private float m_SkullIdlePosY = 2.0f;
+    private int m_StartSortingOrder;
 
     private void Start() {
         m_Hydra = GetComponentInParent<Hydra>();
         m_SkullRb = m_Skull.GetComponent<Rigidbody2D>();
-        m_Skull.GetComponent<SpriteRenderer>().color = Random.ColorHSV();
+        m_SkullRenderer = m_Skull.GetComponent<SpriteRenderer>();
+        m_SkullRenderer.color = Random.ColorHSV();
+        m_StartSortingOrder = m_SkullRenderer.sortingOrder;
     }
 
     public void AttachToBody(GameObject body) {
@@ -60,5 +64,13 @@ public class HydraHead : MonoBehaviour {
 
     public void Eat(int targetCount) {
         m_Hydra.AddFood(targetCount);
+    }
+
+    public void Focus() {
+        m_SkullRenderer.sortingOrder = m_StartSortingOrder + 1;
+    }
+
+    public void EndFocus() {
+        m_SkullRenderer.sortingOrder = m_StartSortingOrder;
     }
 }

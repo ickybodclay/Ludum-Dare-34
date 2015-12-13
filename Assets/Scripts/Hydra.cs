@@ -17,7 +17,7 @@ public class Hydra : MonoBehaviour {
         m_AudioSource = GetComponent<AudioSource>();
 
         GrowHead();
-        GameManager.instance.HighlightHead(m_Heads[m_CurrentHeadIndex]);
+        SetCurrentHead(0);
     }
 	
 	private void Update () {
@@ -64,7 +64,11 @@ public class Hydra : MonoBehaviour {
     }
 
     public void SetCurrentHead(int index) {
+        if(m_CurrentHeadIndex != index)
+            m_Heads[m_CurrentHeadIndex].EndFocus();
+
         m_CurrentHeadIndex = index;
         GameManager.instance.HighlightHead(m_Heads[m_CurrentHeadIndex]);
+        m_Heads[m_CurrentHeadIndex].Focus();
     }
 }
