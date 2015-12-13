@@ -2,7 +2,6 @@
 using UnityEngine.UI;
 using System.Collections.Generic;
 
-
 public class Hydra : MonoBehaviour {
     [SerializeField] private GameObject m_HeadPrefab;
     [SerializeField] private GameObject m_Body;
@@ -44,9 +43,8 @@ public class Hydra : MonoBehaviour {
         if (m_Heads.Count <= 0) return;
 
         m_Heads[m_CurrentHeadIndex].ChompAt(Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane)));
-        m_CurrentHeadIndex = (m_CurrentHeadIndex + 1) % m_Heads.Count;
 
-        GameManager.instance.HighlightHead(m_Heads[m_CurrentHeadIndex]);
+        SetCurrentHead((m_CurrentHeadIndex + 1) % m_Heads.Count);
     }
 
     private void GrowHead() {
@@ -54,8 +52,8 @@ public class Hydra : MonoBehaviour {
         HydraHead newHead = head.GetComponent<HydraHead>();
         newHead.AttachToBody(m_Body);
         m_Heads.Add(newHead);
-        m_CurrentHeadIndex = m_Heads.Count - 1;
-        GameManager.instance.HighlightHead(m_Heads[m_CurrentHeadIndex]);
+
+        SetCurrentHead(m_Heads.Count - 1);
 
         m_AudioSource.pitch = Random.Range(.8f, 1f);
         m_AudioSource.Play();
@@ -63,5 +61,10 @@ public class Hydra : MonoBehaviour {
 
     public void AddFood(int food) {
         m_FoodTotal += food;
+    }
+
+    public void SetCurrentHead(int index) {
+        m_CurrentHeadIndex = index;
+        GameManager.instance.HighlightHead(m_Heads[m_CurrentHeadIndex]);
     }
 }

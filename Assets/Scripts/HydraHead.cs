@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 
 public class HydraHead : MonoBehaviour {
     [SerializeField] private GameObject m_Skull;
